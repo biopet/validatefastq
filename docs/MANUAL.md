@@ -1,0 +1,3 @@
+# Manual
+
+<Elaborate usage description>
