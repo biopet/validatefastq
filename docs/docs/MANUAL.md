@@ -1,3 +1,0 @@
-# Manual
-
-<Elaborate usage description>
