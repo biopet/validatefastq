@@ -49,7 +49,7 @@ source_suffix = ['.rst', '.md']
 master_doc = 'index'
 
 # General information about the project.
-project = u'tool-template'
+project = u'ValidateFastq'
 copyright = u'2017, biopet'
 author = u'biopet'
 
@@ -118,7 +118,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'tool-templatedoc'
+htmlhelp_basename = 'ValidateFastqdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -145,7 +145,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'tool-template.tex', u'tool-template Documentation',
+    (master_doc, 'ValidateFastq.tex', u'v Documentation',
      u'biopet', 'manual'),
 ]
 
@@ -155,7 +155,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'tool-template', u'tool-template Documentation',
+    (master_doc, 'ValidateFastq', u'ValidateFastq Documentation',
      [author], 1)
 ]
 
@@ -166,8 +166,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'tool-template', u'tool-template Documentation',
-     author, 'tool-template', 'One line description of project.',
+    (master_doc, 'ValidateFastq', u'ValidateFastq Documentation',
+     author, 'ValidateFastq', 'Validate fastq files.',
      'Miscellaneous'),
 ]
 
