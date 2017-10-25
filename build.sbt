@@ -24,6 +24,10 @@ publishTo := {
 
 import ReleaseTransformations._
 releaseProcess := Seq[ReleaseStep](
+  releaseStepCommand("git fetch"),
+  releaseStepCommand("git checkout master"),
+  releaseStepCommand("git pull"),
+  releaseStepCommand("git merge origin/develop"),
   checkSnapshotDependencies,
   inquireVersions,
   runClean,
@@ -32,8 +36,11 @@ releaseProcess := Seq[ReleaseStep](
   commitReleaseVersion,
   tagRelease,
   releaseStepCommand("publishSigned"),
+  releaseStepCommand("sonatypeReleaseAll"),
+  pushChanges,
+  releaseStepCommand("git checkout develop"),
+  releaseStepCommand("git merge master"),
   setNextVersion,
   commitNextVersion,
-  releaseStepCommand("sonatypeReleaseAll"),
   pushChanges
 )
