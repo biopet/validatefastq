@@ -7,6 +7,7 @@ import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.{DataProvider, Test}
 
 class ValidateFastqTest extends ToolTest[Args] {
+  def toolCommand: ValidateFastq.type = ValidateFastq
   @Test
   def testNoArgs(): Unit = {
     intercept[IllegalArgumentException] {

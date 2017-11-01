@@ -8,6 +8,8 @@ import scala.util.matching.Regex
 import scala.collection.JavaConversions._
 
 object ValidateFastq extends ToolCommand[Args] {
+  def emptyArgs: Args = Args()
+  def argsParser = new ArgsParser(toolName)
   def main(args: Array[String]): Unit = {
     val parser = new ArgsParser(toolName)
     val cmdArgs =
