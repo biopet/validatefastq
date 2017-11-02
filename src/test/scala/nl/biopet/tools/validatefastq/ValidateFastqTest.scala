@@ -3,10 +3,11 @@ package nl.biopet.tools.validatefastq
 import java.nio.file.Paths
 
 import htsjdk.samtools.fastq.FastqRecord
-import nl.biopet.test.BiopetTest
+import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.{DataProvider, Test}
 
-class ValidateFastqTest extends BiopetTest {
+class ValidateFastqTest extends ToolTest[Args] {
+  def toolCommand: ValidateFastq.type = ValidateFastq
   @Test
   def testNoArgs(): Unit = {
     intercept[IllegalArgumentException] {
