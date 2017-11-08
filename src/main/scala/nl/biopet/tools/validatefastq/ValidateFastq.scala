@@ -48,7 +48,8 @@ object ValidateFastq extends ToolCommand[Args] {
           case _ => // Single end
         }
         if (counter % 1e5 == 0)
-          logger.info(counter + (if (recordR2.isDefined) " pairs" else " reads") + " processed")
+          logger.info(counter + (if (recordR2.isDefined) " pairs"
+                                 else " reads") + " processed")
         lastRecordR1 = Some(recordR1)
         lastRecordR2 = recordR2
       }
@@ -66,7 +67,8 @@ object ValidateFastq extends ToolCommand[Args] {
       logger.info(s"Done processing $counter fastq records, no errors found")
     } catch {
       case e: IllegalStateException =>
-        logger.error(s"Error found at readnumber: $counter, linenumber ${(counter * 4) - 3}")
+        logger.error(
+          s"Error found at readnumber: $counter, linenumber ${(counter * 4) - 3}")
         logger.error(e.getMessage)
     }
 
@@ -142,10 +144,12 @@ object ValidateFastq extends ToolCommand[Args] {
     checkQualEncoding(record)
     record.getReadString match {
       case allowedBases(_) =>
-      case _ => throw new IllegalStateException(s"Non IUPAC symbols identified")
+      case _ =>
+        throw new IllegalStateException(s"Non IUPAC symbols identified")
     }
     if (record.getReadString.length != record.getBaseQualityString.length)
-      throw new IllegalStateException(s"Sequence length does not match quality length")
+      throw new IllegalStateException(
+        s"Sequence length does not match quality length")
   }
 
   /**
@@ -158,8 +162,8 @@ object ValidateFastq extends ToolCommand[Args] {
     val id1 = r1.getReadHeader.takeWhile(_ != ' ')
     val id2 = r2.getReadHeader.takeWhile(_ != ' ')
     if (!(id1 == id2 ||
-      id1.stripSuffix("/1") == id2.stripSuffix("/2") ||
-      id1.stripSuffix(".1") == id2.stripSuffix(".2")))
+          id1.stripSuffix("/1") == id2.stripSuffix("/2") ||
+          id1.stripSuffix(".1") == id2.stripSuffix(".2")))
       throw new IllegalStateException(
         s"Sequence headers do not match. R1: '${r1.getReadHeader}', R2: '${r2.getReadHeader}'")
   }
