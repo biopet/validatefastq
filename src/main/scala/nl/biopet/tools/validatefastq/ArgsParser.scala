@@ -4,7 +4,8 @@ import java.io.File
 
 import nl.biopet.utils.tool.AbstractOptParser
 
-class ArgsParser(cmdName: String) extends AbstractOptParser[Args](cmdName) {
+class ArgsParser(toolCommand: ToolCommand[Args])
+    extends AbstractOptParser[Args](toolCommand) {
   opt[File]('i', "fastq1") required () maxOccurs 1 valueName "<file>" action {
     (x, c) =>
       c.copy(input = x)
