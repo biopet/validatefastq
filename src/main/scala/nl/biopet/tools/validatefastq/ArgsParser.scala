@@ -2,7 +2,7 @@ package nl.biopet.tools.validatefastq
 
 import java.io.File
 
-import nl.biopet.utils.tool.AbstractOptParser
+import nl.biopet.utils.tool.{AbstractOptParser, ToolCommand}
 
 class ArgsParser(toolCommand: ToolCommand[Args])
     extends AbstractOptParser[Args](toolCommand) {
