@@ -167,4 +167,35 @@ object ValidateFastq extends ToolCommand[Args] {
       throw new IllegalStateException(
         s"Sequence headers do not match. R1: '${r1.getReadHeader}', R2: '${r2.getReadHeader}'")
   }
+
+  def descriptionText: String =
+    s"""
+      |This tool validates a FASTQ file. When data is paired it can
+      |also validate a pair of FASTQ files.
+      |$toolName will check if the FASTQ is in valid FASTQ format.
+      |This includes checking for duplicate reads and checking whether
+      |a pair of FASTQ files contains the same amount of reads and headers match.
+      |It also check whether the quality encodings are correct and outputs
+      |the most likely encoding format (Sanger, Solexa etc.).
+    """.stripMargin
+
+  def manualText: String =
+    s"""
+       |$toolName validates the following things:
+       |
+       |- If paired: whether both fastqs have the same amount of reads
+       |- If paired: whether sequence headers match.
+       |- Whether the quality encoding is of the same length as the sequence in a read
+       |- Whether the sequence consists of AGTC only. Regex: `$allowedBases`
+       |- Whether the quality encoding is within a valid ASCII range
+     """.stripMargin
+
+  def exampleText: String =
+    s"""
+       | To validate a fastq file use:
+       | ${example("-i", "input.fastq")}
+       |
+       | To validate a pair of fastq files use:
+       | ${example("-i", "input.fastq", "-j" , "input2.fastq")}
+     """.stripMargin
 }
