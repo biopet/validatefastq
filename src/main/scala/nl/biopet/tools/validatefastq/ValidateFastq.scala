@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2014 Sequencing Analysis Support Core - Leiden University Medical Center
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package nl.biopet.tools.validatefastq
 
 import htsjdk.samtools.fastq.{FastqReader, FastqRecord}
@@ -9,7 +30,7 @@ import scala.collection.JavaConversions._
 
 object ValidateFastq extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
-  def argsParser = new ArgsParser(toolName)
+  def argsParser = new ArgsParser(this)
   def main(args: Array[String]): Unit = {
     val cmdArgs = cmdArrayToArgs(args)
 
@@ -48,8 +69,9 @@ object ValidateFastq extends ToolCommand[Args] {
           case _ => // Single end
         }
         if (counter % 1e5 == 0)
-          logger.info(counter + (if (recordR2.isDefined) " pairs"
-                                 else " reads") + " processed")
+          logger.info(
+            counter + (if (recordR2.isDefined) " pairs"
+                       else " reads") + " processed")
         lastRecordR1 = Some(recordR1)
         lastRecordR2 = recordR2
       }
@@ -167,4 +189,35 @@ object ValidateFastq extends ToolCommand[Args] {
       throw new IllegalStateException(
         s"Sequence headers do not match. R1: '${r1.getReadHeader}', R2: '${r2.getReadHeader}'")
   }
+
+  def descriptionText: String =
+    s"""
+      |This tool validates a FASTQ file. When data is paired it can
+      |also validate a pair of FASTQ files.
+      |$toolName will check if the FASTQ is in valid FASTQ format.
+      |This includes checking for duplicate reads and checking whether
+      |a pair of FASTQ files contains the same amount of reads and headers match.
+      |It also check whether the quality encodings are correct and outputs
+      |the most likely encoding format (Sanger, Solexa etc.).
+    """.stripMargin
+
+  def manualText: String =
+    s"""
+       |$toolName validates the following things:
+       |
+       |- If paired: whether both fastqs have the same amount of reads
+       |- If paired: whether sequence headers match.
+       |- Whether the quality encoding is of the same length as the sequence in a read
+       |- Whether the sequence consists of AGTC only. Regex: `$allowedBases`
+       |- Whether the quality encoding is within a valid ASCII range
+     """.stripMargin
+
+  def exampleText: String =
+    s"""
+       | To validate a fastq file use:
+       | ${example("-i", "input.fastq")}
+       |
+       | To validate a pair of fastq files use:
+       | ${example("-i", "input.fastq", "-j", "input2.fastq")}
+     """.stripMargin
 }

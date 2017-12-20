@@ -10,13 +10,10 @@ node('local') {
             sh 'git submodule update --init --recursive'
         }
 
-        stage('Build') {
-            sh "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors clean compile"
-        }
-
-        stage('Test') {
-            sh "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors coverageOn assembly coverageReport"
+        stage('Build & Test') {
+            sh "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors clean scalafmt headerCreate coverage test coverageReport coverageAggregate makeSite biopetGenerateReadme assembly"
             sh "java -jar target/scala-2.11/*-assembly-*.jar -h"
+            sh "git diff --exit-code || (echo \"ERROR: Git changes detected, please regenerate the readme, create license headers and run scalafmt: sbt biopetGenerateReadme headerCreate scalafmt\" && exit 1)"
         }
 
         stage('Results') {
@@ -25,7 +22,7 @@ node('local') {
         }
 
         if (env.BRANCH_NAME == 'develop') stage('Publish') {
-            sh "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors publishSigned"
+            sh "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors publishSigned ghpagesPushSite"
         }
 
         if (currentBuild.result == null || "SUCCESS" == currentBuild.result) {
