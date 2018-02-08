@@ -1,5 +1,5 @@
 organization := "com.github.biopet"
-organizationName := "Sequencing Analysis Support Core - Leiden University Medical Center"
+organizationName := "Biopet"
 
 startYear := Some(2014)
 
