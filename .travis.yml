@@ -2,7 +2,7 @@ language: scala
 scala:
   - 2.11.11
 script:
-  - "sbt -batch clean evicted biopetTest coveralls | tee sbt.log"
+  - "set -o pipefail && sbt -batch clean evicted biopetTest coveralls | tee sbt.log"
   - |
     n=`grep -ce "\* com.github.biopet" sbt.log`
     if [ "$n" -ne "0" ]; then echo "ERROR: Found conflicting dependencies inside biopet"; exit 1; fi
