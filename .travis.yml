@@ -3,9 +3,9 @@ scala:
   - 2.11.11
 script:
   - "sbt -batch clean evicted biopetTest coveralls | tee sbt.log"
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
   - |
     n=`grep -ce "\* com.github.biopet" sbt.log`
     if [ "$n" -ne "0" ]; then echo "ERROR: Found conflicting dependencies inside biopet"; exit 1; fi
   - "git diff --exit-code || (echo ERROR: Git changes detected, please regenerate the readme, create license headers and run scalafmt with: sbt biopetGenerateReadme headerCreate scalafmt && exit 1)"
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
