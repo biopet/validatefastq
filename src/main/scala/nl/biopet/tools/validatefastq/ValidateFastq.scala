@@ -152,7 +152,8 @@ object ValidateFastq extends ToolCommand[Args] {
     * @param before fastq record before the current record
     * @throws IllegalStateException Throws this when an error is ofund during checking
     */
-  def duplicateCheck(current: FastqRecord, before: Option[FastqRecord]): Unit = {
+  def duplicateCheck(current: FastqRecord,
+                     before: Option[FastqRecord]): Unit = {
     if (before.exists(_.getReadHeader == current.getReadHeader))
       throw new IllegalStateException("Duplicate read ID found")
   }
