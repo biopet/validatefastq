@@ -11,7 +11,9 @@ node('local') {
         }
 
         stage('Build & Test') {
-            sh "set -o pipefail && ${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors clean evicted biopetTest assembly | tee sbt.log"
+            sh "#!/bin/bash\n" +
+                    "set -e -o pipefail\n" +
+                    "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors clean evicted biopetTest assembly | tee sbt.log"
             //sh "java -jar target/scala-2.11/*-assembly-*.jar -h" // Not possible for spark tools
             sh 'n=`grep -ce "\\* com.github.biopet" sbt.log || true`; if [ "$n" -ne \"0\" ]; then echo "ERROR: Found conflicting dependencies inside biopet"; exit 1; fi'
             sh "git diff --exit-code || (echo \"ERROR: Git changes detected, please regenerate the readme, create license headers and run scalafmt: sbt biopetGenerateReadme headerCreate scalafmt\" && exit 1)"
