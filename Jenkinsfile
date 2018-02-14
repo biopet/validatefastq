@@ -2,7 +2,7 @@ node('local') {
     try {
 
         stage('Init') {
-            env.JAVA_HOME="${tool 'JDK 8u102'}"
+            env.JAVA_HOME="${tool 'JDK 8u162'}"
             env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
             sh 'java -version'
             tool 'sbt 0.13.15'
@@ -11,8 +11,8 @@ node('local') {
         }
 
         stage('Build & Test') {
-            sh "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors clean evicted biopetTest assembly | tee sbt.log"
-            sh "java -jar target/scala-2.11/*-assembly-*.jar -h"
+            sh "set -o pipefail && ${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors clean evicted biopetTest assembly | tee sbt.log"
+            //sh "java -jar target/scala-2.11/*-assembly-*.jar -h" // Not possible for spark tools
             sh 'n=`grep -ce "\\* com.github.biopet" sbt.log || true`; if [ "$n" -ne \"0\" ]; then echo "ERROR: Found conflicting dependencies inside biopet"; exit 1; fi'
             sh "git diff --exit-code || (echo \"ERROR: Git changes detected, please regenerate the readme, create license headers and run scalafmt: sbt biopetGenerateReadme headerCreate scalafmt\" && exit 1)"
         }
@@ -23,7 +23,7 @@ node('local') {
         }
 
         if (env.BRANCH_NAME == 'develop') stage('Publish') {
-            sh "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors publishSigned ghpagesPushSite"
+            sh "${tool name: 'sbt 0.13.15', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'}/bin/sbt -no-colors publish ghpagesPushSite"
         }
 
         if (currentBuild.result == null || "SUCCESS" == currentBuild.result) {
