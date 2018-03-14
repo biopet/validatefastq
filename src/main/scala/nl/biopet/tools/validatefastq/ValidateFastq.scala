@@ -22,6 +22,7 @@
 package nl.biopet.tools.validatefastq
 
 import htsjdk.samtools.fastq.{FastqReader, FastqRecord}
+import nl.biopet.utils.ngs.fastq.Encoding
 import nl.biopet.utils.tool.ToolCommand
 
 import scala.collection.mutable.ListBuffer
@@ -131,14 +132,11 @@ object ValidateFastq extends ToolCommand[Args] {
     val buffer: ListBuffer[String] = ListBuffer()
     (minQual, maxQual) match {
       case (Some(min), Some(max)) =>
+        val encodings = Encoding.possibleEncodings(min, max)
         if (min < '!' || max > '~')
           throw new IllegalStateException(
             s"Quality is out of ascii range 33-126.  minQual: '$min', maxQual: '$max'")
-        if (min >= '!' && max <= 'I') buffer += "Sanger"
-        if (min >= ';' && max <= 'h') buffer += "Solexa"
-        if (min >= '@' && max <= 'h') buffer += "Illumina 1.3+"
-        if (min >= 'C' && max <= 'h') buffer += "Illumina 1.5+"
-        if (min >= '!' && max <= 'J') buffer += "Illumina 1.8+"
+        encodings.foreach(buffer += _.name)
       case _ =>
     }
     buffer.toList
@@ -154,7 +152,7 @@ object ValidateFastq extends ToolCommand[Args] {
     */
   def duplicateCheck(current: FastqRecord,
                      before: Option[FastqRecord]): Unit = {
-    if (before.exists(_.getReadHeader == current.getReadHeader))
+    if (before.exists(_.getReadName == current.getReadName))
       throw new IllegalStateException("Duplicate read ID found")
   }
 
