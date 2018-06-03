@@ -1,0 +1,227 @@
+<!--
+   Copyright (c) 2014 Biopet
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy of
+   this software and associated documentation files (the "Software"), to deal in
+   the Software without restriction, including without limitation the rights to
+   use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+   the Software, and to permit persons to whom the Software is furnished to do so,
+   subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>ValidateFastq</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="css/docs.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">ValidateFastq</a>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text" id="Version">
+              Version</li>
+          </ul>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </nav>
+  <div class="container">
+
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar" >
+
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Index</b></li>
+          
+          <li><a href="#description"><span>Description</span></a></li>
+          
+          <li><a href="#installation"><span>Installation</span></a></li>
+          
+          <li><a href="#manual"><span>Manual</span></a></li>
+          
+          <li><a href="#about"><span>About</span></a></li>
+          
+          <li><a href="#contributing"><span>Contributing</span></a></li>
+          
+          <li><a href="#contact"><span>Contact</span></a></li>
+          
+        </ul>
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Project Links</b></li>
+
+          <li><a href="https://github.com/biopet/validatefastq">Source code</a></li>
+          <li><a href="https://github.com/biopet/validatefastq/issues">Feedback, feature requests and bug reports</a></li>
+          <li><a href="api/index.html">API Documentation</a></li>
+        </ul>
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Documentation</b></li>
+          <li><a href="../index.html">Latest stable version</a></li>
+          <li><a href="../develop/index.html">Development version</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="top">
+
+        
+        <h1 id="description" class="section">Description</h1>
+        <p>This tool validates a FASTQ file. When data is paired it can
+        also validate a pair of FASTQ files.
+        ValidateFastq will check if the FASTQ is in valid FASTQ format.
+        This includes checking for duplicate reads and checking whether
+        a pair of FASTQ files contains the same amount of reads and headers match.
+        It also check whether the quality encodings are correct and outputs
+        the most likely encoding format (Sanger, Solexa etc.).</p>
+        
+        <h1 id="installation" class="section">Installation</h1>
+        <p>ValidateFastq requires Java 8 to be installed on your device. Download Java 8
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html">here</a>
+        or install via your distribution&#39;s package manager.</p>
+        <p>Download the latest version of ValidateFastq <a href="https://github.com/biopet/validatefastq/releases/">here</a>.
+        To generate the usage run:</p>
+        <pre><code>java -jar &lt;ValidateFastq_jar&gt; --help</code></pre>
+        
+        <h1 id="manual" class="section">Manual</h1>
+        <p>ValidateFastq validates the following things:</p>
+        <ul>
+          <li>If paired: whether both fastqs have the same amount of reads</li>
+          <li>If paired: whether sequence headers match.</li>
+          <li>Whether the quality encoding is of the same length as the sequence in a read</li>
+          <li>Whether the sequence consists of AGTC only. Regex: <code>([actgnACTGN+]+)</code></li>
+          <li>Whether the quality encoding is within a valid ASCII range</li>
+        </ul>
+        
+        <h2 id="example" class="section">Example</h2>
+        <p> To validate a fastq file use:</p>
+        <pre><code>java -jar &lt;ValidateFastq_jar&gt; \
+-i input.fastq
+
+
+</code></pre>
+        <p> To validate a pair of fastq files use:</p>
+        <pre><code>java -jar &lt;ValidateFastq_jar&gt; \
+-i input.fastq \
+-j input2.fastq</code></pre>
+        
+        <h2 id="usage" class="section">Usage</h2>
+        <p>Usage for ValidateFastq:</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Required</th>
+              <th>Can occur multiple times</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>--log_level, -l</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Level of log information printed. Possible levels: &#39;debug&#39;, &#39;info&#39;, &#39;warn&#39;, &#39;error&#39;</td>
+            </tr>
+            <tr>
+              <td>--help, -h</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Print usage</td>
+            </tr>
+            <tr>
+              <td>--version, -v</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Print version</td>
+            </tr>
+            <tr>
+              <td>--fastq1, -i</td>
+              <td>yes</td>
+              <td>no</td>
+              <td>FASTQ file to be validated. (Required)</td>
+            </tr>
+            <tr>
+              <td>--fastq2, -j</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Second FASTQ to be validated if FASTQs are paired. (Optional)</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h1 id="about" class="section">About</h1>
+        <p>ValidateFastq is part of BIOPET tool suite that is developed at LUMC by <a href="http://sasc.lumc.nl/">the SASC team</a>.
+        Each tool in the BIOPET tool suite is meant to offer a standalone function that can be used to perform a
+        dedicate data analysis task or added as part of <a href="http://biopet-docs.readthedocs.io/en/latest/">BIOPET pipelines</a>.</p>
+        <p>All tools in the BIOPET tool suite are <a href="https://www.gnu.org/philosophy/free-sw.html">Free/Libre</a> and
+        <a href="https://opensource.org/osd">Open Source</a> Software.</p>
+        
+        <h1 id="contributing" class="section">Contributing</h1>
+        <p>The source code of ValidateFastq can be found <a href="https://github.com/biopet/validatefastq">here</a>.
+        We welcome any contributions. Bug reports, feature requests and feedback can be submitted at our
+        <a href="https://github.com/biopet/validatefastq/issues">issue tracker</a>.</p>
+        <p>ValidateFastq is build using sbt. Before submitting a pull request, make sure all tests can be passed by
+        running <code>sbt test</code> from the project&#39;s root. We recommend using an IDE to work on ValidateFastq. We have had
+        good results with <a href="https://www.jetbrains.com/idea/">this IDE</a>.</p>
+        
+        <h1 id="contact" class="section">Contact</h1>
+        <p>
+          <!-- Obscure e-mail address for spammers -->
+        For any question related to ValidateFastq, please use the
+        <a href='https://github.com/biopet/validatefastq/issues'>github issue tracker</a>
+        or contact
+         <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
+        &#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;</a>.
+        </p>      
+
+      </div>
+    </div>
+
+  </div>
+  <script>
+    var loc = window.location.pathname;
+    var thisDir = loc.substring(0, loc.lastIndexOf('/'));
+    var splitLocation = window.location.pathname.split('/');
+    var version = splitLocation[splitLocation.length - 2]
+    document.getElementById("Version").innerHTML = "Version " + version;
+  </script>
+</body>
+
+</html>
