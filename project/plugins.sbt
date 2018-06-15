@@ -1,1 +1,1 @@
-addSbtPlugin("com.github.biopet" % "sbt-biopet" % "0.6-SNAPSHOT")
+addSbtPlugin("com.github.biopet" % "sbt-biopet" % "0.7-SNAPSHOT" changing())
