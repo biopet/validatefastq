@@ -89,6 +89,13 @@ object ValidateFastq extends ToolCommand[Args] {
 
       logger.info(s"Done processing $counter fastq records, no errors found")
     } catch {
+      case e: IllegalStateException if cmdArgs.failOnError =>
+        logger.error(
+          s"Error found at readnumber: $counter, linenumber ${(counter * 4) - 3}")
+        logger.error(e.getMessage)
+        throw new IllegalStateException(
+          s"Error found at readnumber: $counter, linenumber ${(counter * 4) - 3}",
+          e)
       case e: IllegalStateException =>
         logger.error(
           s"Error found at readnumber: $counter, linenumber ${(counter * 4) - 3}")

@@ -21,8 +21,6 @@
 
 package nl.biopet.tools.validatefastq
 
-import java.nio.file.Paths
-
 import htsjdk.samtools.fastq.FastqRecord
 import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.{DataProvider, Test}
