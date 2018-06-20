@@ -34,4 +34,7 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[File]('j', "fastq2") maxOccurs 1 valueName "<file>" action { (x, c) =>
     c.copy(input2 = Some(x))
   } text "Second FASTQ to be validated if FASTQs are paired. (Optional)"
+  opt[Unit]("disableFail") maxOccurs 1 valueName "<file>" action { (_, c) =>
+    c.copy(failOnError = false)
+  } text "Do not fail on error. The tool will still exit when encountering an error, but will do so with exit code 0"
 }
