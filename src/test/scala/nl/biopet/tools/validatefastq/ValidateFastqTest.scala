@@ -35,17 +35,6 @@ class ValidateFastqTest extends ToolTest[Args] {
   }
 
   @Test
-  def testCheckMate(): Unit = {
-    ValidateFastq.checkMate(new FastqRecord("read_1", "ATCG", "", "AAAA"),
-                            new FastqRecord("read_1", "ATCG", "", "AAAA"))
-
-    intercept[IllegalStateException] {
-      ValidateFastq.checkMate(new FastqRecord("read_1", "ATCG", "", "AAAA"),
-                              new FastqRecord("read_2", "ATCG", "", "AAAA"))
-    }
-  }
-
-  @Test
   def testDuplicateCheck(): Unit = {
     ValidateFastq.duplicateCheck(new FastqRecord("read_1", "ATCG", "", "AAAA"),
                                  None)
