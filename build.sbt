@@ -3,7 +3,7 @@ organizationName := "Biopet"
 
 startYear := Some(2014)
 
-name := "validatefastq"
+name := "ValidateFastq"
 biopetUrlName := "validatefastq"
 
 biopetIsTool := true
