@@ -21,8 +21,6 @@
 
 package nl.biopet.tools.validatefastq
 
-import java.nio.file.Paths
-
 import htsjdk.samtools.fastq.FastqRecord
 import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.{DataProvider, Test}
@@ -33,17 +31,6 @@ class ValidateFastqTest extends ToolTest[Args] {
   def testNoArgs(): Unit = {
     intercept[IllegalArgumentException] {
       ValidateFastq.main(Array())
-    }
-  }
-
-  @Test
-  def testCheckMate(): Unit = {
-    ValidateFastq.checkMate(new FastqRecord("read_1", "ATCG", "", "AAAA"),
-                            new FastqRecord("read_1", "ATCG", "", "AAAA"))
-
-    intercept[IllegalStateException] {
-      ValidateFastq.checkMate(new FastqRecord("read_1", "ATCG", "", "AAAA"),
-                              new FastqRecord("read_2", "ATCG", "", "AAAA"))
     }
   }
 
@@ -158,11 +145,15 @@ class ValidateFastqTest extends ToolTest[Args] {
     val r2 = resourcePath("/paired01b.fq")
     ValidateFastq.main(Array("-i", r1, "-j", r2))
 
-    //TODO: capture logs
     ValidateFastq.minQual = None
     ValidateFastq.maxQual = None
     val r2fail = resourcePath("/paired01c.fq")
-    ValidateFastq.main(Array("-i", r1, "-j", r2fail))
+    ValidateFastq.main(Array("-i", r1, "-j", r2fail, "--disableFail"))
+
+    val error = intercept[IllegalStateException] {
+      ValidateFastq.main(Array("-i", r1, "-j", r2fail))
+    }.getMessage
+    error.contains("Error found at readnumber") shouldBe true
   }
 
 }

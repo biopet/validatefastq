@@ -23,11 +23,12 @@ package nl.biopet.tools.validatefastq
 
 import htsjdk.samtools.fastq.{FastqReader, FastqRecord}
 import nl.biopet.utils.ngs.fastq.Encoding
+import nl.biopet.utils.ngs.fastq.validation.checkMate
 import nl.biopet.utils.tool.ToolCommand
 
+import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
 import scala.util.matching.Regex
-import scala.collection.JavaConversions._
 
 object ValidateFastq extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
@@ -66,7 +67,9 @@ object ValidateFastq extends ToolCommand[Args] {
           case Some(r2) => // Paired End
             validFastqRecord(r2)
             duplicateCheck(r2, lastRecordR2)
-            checkMate(recordR1, r2)
+            require(
+              checkMate(recordR1, r2),
+              s"Sequence headers do not match. R1: '${recordR1.getReadName}', R2: '${r2.getReadName}'")
           case _ => // Single end
         }
         if (counter % 1e5 == 0)
@@ -89,6 +92,13 @@ object ValidateFastq extends ToolCommand[Args] {
 
       logger.info(s"Done processing $counter fastq records, no errors found")
     } catch {
+      case e: IllegalStateException if cmdArgs.failOnError =>
+        logger.error(
+          s"Error found at readnumber: $counter, linenumber ${(counter * 4) - 3}")
+        logger.error(e.getMessage)
+        throw new IllegalStateException(
+          s"Error found at readnumber: $counter, linenumber ${(counter * 4) - 3}",
+          e)
       case e: IllegalStateException =>
         logger.error(
           s"Error found at readnumber: $counter, linenumber ${(counter * 4) - 3}")
@@ -171,22 +181,6 @@ object ValidateFastq extends ToolCommand[Args] {
     if (record.getReadString.length != record.getBaseQualityString.length)
       throw new IllegalStateException(
         s"Sequence length does not match quality length")
-  }
-
-  /**
-    * This method checks if the pair is the same ID
-    * @param r1 R1 fastq record
-    * @param r2 R2 fastq record
-    * @throws IllegalStateException Throws this when an error is ofund during checking
-    */
-  def checkMate(r1: FastqRecord, r2: FastqRecord): Unit = {
-    val id1 = r1.getReadHeader.takeWhile(_ != ' ')
-    val id2 = r2.getReadHeader.takeWhile(_ != ' ')
-    if (!(id1 == id2 ||
-          id1.stripSuffix("/1") == id2.stripSuffix("/2") ||
-          id1.stripSuffix(".1") == id2.stripSuffix(".2")))
-      throw new IllegalStateException(
-        s"Sequence headers do not match. R1: '${r1.getReadHeader}', R2: '${r2.getReadHeader}'")
   }
 
   def descriptionText: String =
